@@ -1,48 +1,60 @@
-#PI Keeper
+# 🥧 PI Keeper
 
-A Raspberry Pi that remotely wakes up a bigger server on demand, instead of leaving it running 24/7. This way I'm cutting electricity costs from about 15 Euros/month down to 1-2 Euros/month.
+A low-power Raspberry Pi setup designed to remotely wake up a heavier server on demand, cutting electricity costs from ~15€/month down to 1–2€/month.
 
-Demo
+---
 
-https://www.youtube.com/watch?v=MNQya4osDNU
+## 📹 Demo
 
-Setup
+[![Watch Demo](https://img.shields.io/badge/YouTube-Watch%20Demo-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=MNQya4osDNU)
 
+---
 
-Raspberry Pi 4B (Raspberry Pi OS Lite) - always-on, low-power controller.
-Dell OptiPlex (Ubuntu LTS 24) - the actual server, only powered on when needed. Runs a Minecraft server.
-The Pi wakes the Dell via Wake-on-LAN and can shut it down remotely over SSH using key-based authentication.
+## 🛠️ Hardware & OS Setup
 
+| Component / Device | OS / Role |
+| :--- | :--- |
+| **Raspberry Pi 4B** | Raspberry Pi OS Lite — *Always-on, low-power controller* |
+| **Dell OptiPlex** | Ubuntu LTS 24 — *Main server (runs a Minecraft server, powered on only when needed)* |
 
-Networking & Security
+* **Functionality:** The Pi wakes up the Dell via **Wake-on-LAN** and shuts it down remotely over **SSH** using key-based authentication.
 
+---
 
-WireGuard runs on the Pi, so I can SSH into it remotely through the VPN instead of exposing SSH to the internet.
-Port forwarding is configured on both the router and the Pi itself (via UFW).
-Only two ports are open to the outside: 25565 (Minecraft) and the WireGuard port.
-SSH (port 22) is internal-only, no external access, reachable only once connected through the VPN.
-On boot, the minecraft service is enabled on the Dell, so the server comes up automatically once the machine powers on.
+## 🔒 Networking & Security
 
+* **VPN Access:** WireGuard runs on the Pi, allowing secure remote SSH access without exposing SSH directly to the internet.
+* **Port Forwarding & Firewall:** Configured on both the router and the Pi (via UFW).
+* **Open Ports (External):** Only **25565** (Minecraft) and the **WireGuard** port.
+* **Internal Security:** SSH (port 22) is internal-only and accessible exclusively through the VPN.
+* **Automation:** The Minecraft service is enabled on boot on the Dell, starting automatically once powered on.
 
-Scripts
+---
 
-Two Bash scripts live in the Pi's $USER directory:
+## 📜 Automation & Scripts
 
+Two main Bash scripts live in the Pi's `$USER` directory:
+* **Wake script:** Sends a Wake-on-LAN packet to power on the Dell.
+* **Shutdown script:** Connects over SSH (key-based auth) and shuts down the Dell cleanly.
 
-Wake script - sends a Wake-on-LAN packet to power on the Dell.
-Shutdown script - connects over SSH (key-based auth) and shuts the Dell down cleanly.
+### 🔄 Setup Script
+Created to handle OS reinstalls (due to micro-SD/USB wear over time). 
+* Automatically updates/upgrades the system.
+* Fully installs and sets up **WireGuard**, **UFW**, **Etherwake**, etc.
 
-Setup script - I made this in case I need to reinstall the os on the Raspberry Pi. Wich I need to do from time to time because usb sticks and micro-sd cards can't run an os for too long. The script updates and upgrades the script. It also fully installs and sets up Wireguard, UFW, Etherwake etc.
+---
 
+## ⚠️ Challenges & Learnings
 
-Tech Stack
+* **Initial WireGuard hurdle:** Manually setting up WireGuard initially gave me local network access through the VPN, but cut off internet routing. 
+* **Solution:** Switched to **angristan's setup script on GitHub**, which provided a reliable, plug-and-play configuration.
 
-Raspberry Pi OS Lite, Ubuntu LTS 24
-WireGuard, UFW, OpenSSH, Etherwake (key-based auth)
-Wake-on-LAN enabled in BIOS
-Bash
+---
 
+## 🧰 Tech Stack
 
-Challenges
-
-First I tried setting up Wireguard manually. I somehow made it work, but I only had access to the local network through the VPN. I couldn't access the internet. Then I found angristan's setup on github wich is plug and play more or less.
+![Raspberry Pi](https://img.shields.io/badge/Raspberry%2520Pi-C51A4A?style=for-the-badge&logo=Raspberry-Pi&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![WireGuard](https://img.shields.io/badge/WireGuard-88171A?style=for-the-badge&logo=wireguard&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Bash](https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white)
